@@ -1,7 +1,5 @@
 'use strict';
 
-const { get } = require('request');
-
 let access_token = '8030d847f96b88cfbf2a0cc548de6db8fe657223',
 	refresh_token = '3998a63a6edc3b4c33b2a29cd89d0d4782bb5458';
 const PAGE_ACCESS_TOKEN = 'EAAFwj8mMOSMBAGxgWxa83tfVwqLvuJTIk1hNNhqmYWa5GAZCSS8u9rclZAZBeDGX5hO73XlZCedLOAWU4K8LcqZBpd2wA1fwBHWxtcuOqiDEVZAUurKFMtpeT6egP9GYbMIPRDvagWv2qV0Ng2VhL7qzdaYMHfwGMxsPZBaMKkFztHstWBDMNba';

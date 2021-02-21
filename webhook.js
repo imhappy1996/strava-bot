@@ -2,7 +2,7 @@
 
 let access_token = '8030d847f96b88cfbf2a0cc548de6db8fe657223',
 	refresh_token = '3998a63a6edc3b4c33b2a29cd89d0d4782bb5458';
-const PAGE_ACCESS_TOKEN = 'EAAFwj8mMOSMBAGxgWxa83tfVwqLvuJTIk1hNNhqmYWa5GAZCSS8u9rclZAZBeDGX5hO73XlZCedLOAWU4K8LcqZBpd2wA1fwBHWxtcuOqiDEVZAUurKFMtpeT6egP9GYbMIPRDvagWv2qV0Ng2VhL7qzdaYMHfwGMxsPZBaMKkFztHstWBDMNba';
+const PAGE_ACCESS_TOKEN = 'EAAFwj8mMOSMBABW4BVQZAohIunWJqBMkQPhXmXuemwDhJTGu3FA0OJCXNxm1dg2gHL1OZCOtUkEnTVHR4QpzZB7pxT4V0loJpa2hkwa89qZClXZBf4t6Gcw9x5gPhPtf2uBa6ZATDXE84FEJuXq6QlQVRTLPQn5qWQiXjTJhZCvqxX1pT2GqPiMq95ZBXCYkecM5z6pHtKOUOgZDZD';
 const pageId = '106483024744694';
 
 // Imports dependencies and sets up http server
@@ -22,9 +22,9 @@ app.post('/webhook',async (req, res) => {
 	if (!req.body || req.body.aspect_type !== 'create') res.status(500).send();;
 
 	let activityId = req.body.object_id;
-	let textMessage = getActivityById(activityId);
+	// let textMessage = getActivityById(activityId);
 	let response = await sendMessageToFacebook({
-			message: textMessage
+			message: activityId
 	}) 
 	if (response) {
   		res.status(200).send('EVENT_RECEIVED');
@@ -69,11 +69,7 @@ const sendMessageToFacebook = async (messageObject) => {
 }
 
 async function publishDataOnPage(data) {
-	let response = await axios.post(`https://graph.facebook.com/v9.0/${pageId}/feed`, data, {
-		headers: {
-			access_token: PAGE_ACCESS_TOKEN
-		}
-	});
+	let response = await axios.post(`https://graph.facebook.com/v9.0/${pageId}/feed?access_token=${PAGE_ACCESS_TOKEN}`, data);
 	console.log(response);
 	return true;
   

@@ -1,8 +1,8 @@
 'use strict';
 
-let access_token = '8030d847f96b88cfbf2a0cc548de6db8fe657223',
-	refresh_token = '3998a63a6edc3b4c33b2a29cd89d0d4782bb5458';
-const PAGE_ACCESS_TOKEN = 'EAAFwj8mMOSMBABW4BVQZAohIunWJqBMkQPhXmXuemwDhJTGu3FA0OJCXNxm1dg2gHL1OZCOtUkEnTVHR4QpzZB7pxT4V0loJpa2hkwa89qZClXZBf4t6Gcw9x5gPhPtf2uBa6ZATDXE84FEJuXq6QlQVRTLPQn5qWQiXjTJhZCvqxX1pT2GqPiMq95ZBXCYkecM5z6pHtKOUOgZDZD';
+let access_token = '9e972f7b613ffe2c441ffedc73a203b24778d3fe',
+	refresh_token = '533bc9457c549f0b98d1d55bcc6c6ef8fdb5437c';
+const PAGE_ACCESS_TOKEN = 'EAAFwj8mMOSMBADlCqqIq6g9eceUZCaQBmPqe9Azdif7jZAeVH5LbDSbq02XPANj3nPXuHZBUCRLAmztplndZAuJFPqQZCZC6GTq5x0sZA8yM2ZADf8UxLMSByBDfIb2qNmRhQyhGK5ZByU9CxVowW8cbLW0CC9xobthd0oQLEovB8AtybCcRi7TlXgm5I2424GFd3Cem7P9KKBwZDZD';
 const pageId = '106483024744694';
 
 // Imports dependencies and sets up http server
@@ -19,18 +19,18 @@ app.listen(process.env.PORT || 3333, () => console.log('webhook is listening 333
 // Creates the endpoint for our webhook
 app.post('/webhook',async (req, res) => {
   console.log("webhook event received!", new Date(), req.body);
-	if (!req.body || req.body.aspect_type !== 'create') res.status(500).send();;
-
-	let activityId = req.body.object_id;
-	// let textMessage = getActivityById(activityId);
-	let response = await sendMessageToFacebook({
-			message: activityId
-	}) 
-	if (response) {
-  		res.status(200).send('EVENT_RECEIVED');
-	}
-	else {
-		res.status(500).send();
+	if (req.body && req.body.aspect_type === 'create'){
+		let activityId = req.body.object_id;
+		let textMessage = await getActivityById(activityId);
+		let response = await sendMessageToFacebook({
+				message: textMessage
+		}) 
+		if (response) {
+			  res.status(200).send('EVENT_RECEIVED');
+		}
+		else {
+			res.status(500).send();
+		}
 	}
 });
 
@@ -43,15 +43,18 @@ const getActivityById = async (activityId) => {
 		   Authorization: 'Bearer ' + access_token 
 		 }
 		});
-		let distance = Number(response.data.distance) / 100;
+		let distance = Number(response.data.distance) / 1000;
 		let moving_time = Number(response.data.moving_time);
-		let textMessage = `distance: ${distance} km
+		let textMessage = `${response.data.name}
+							distance: ${distance} km
 						   time : ${moving_time / 60}m${moving_time % 60}s
 							`;
 		return textMessage;
 		
 	} catch (error) {
+		return "have an error!!";
 		console.log(error.code);
+	} finally {
 	}
 	
 }
@@ -70,7 +73,6 @@ const sendMessageToFacebook = async (messageObject) => {
 
 async function publishDataOnPage(data) {
 	let response = await axios.post(`https://graph.facebook.com/v9.0/${pageId}/feed?access_token=${PAGE_ACCESS_TOKEN}`, data);
-	console.log(response);
 	return true;
   
 }
